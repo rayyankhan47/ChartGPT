@@ -8,6 +8,8 @@ class MedicalAutocomplete {
         this.lastCursorPosition = null;
         this.typingTimeout = null;
         this.medicalContext = '';
+        this.lastDocumentText = '';
+        this.currentTypingWord = '';
         
         this.init();
     }
@@ -65,6 +67,8 @@ class MedicalAutocomplete {
             
             // Check for typing (letters, numbers, space)
             if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete') {
+                // Track what's being typed
+                this.trackTyping(e.key);
                 setTimeout(() => {
                     this.handleDocumentChange();
                 }, 100);
@@ -87,11 +91,9 @@ class MedicalAutocomplete {
         const docText = this.getGoogleDocsText();
         console.log('Document text:', docText.substring(0, 100));
         
-        // Find the last word being typed
-        const words = docText.split(/\s+/);
-        const currentWord = words[words.length - 1] || '';
-        
-        console.log('Current word:', currentWord, 'Length:', currentWord.length);
+        // Get the current word being typed (not just the last word)
+        const currentWord = this.getCurrentTypingWord();
+        console.log('Current word being typed:', currentWord, 'Length:', currentWord.length);
         
         if (currentWord.length < 2) {
             console.log('Word too short, hiding suggestions');
@@ -99,8 +101,9 @@ class MedicalAutocomplete {
             return;
         }
 
-        // Get context (last few words)
-        const context = words.slice(-5).join(' ');
+        // Get context (last few words before current word)
+        const words = docText.split(/\s+/);
+        const context = words.slice(-3).join(' '); // Last 3 words for context
         
         // Check for medical autocomplete triggers
         console.log('Getting medical suggestions...');
@@ -114,6 +117,67 @@ class MedicalAutocomplete {
         } else {
             console.log('No suggestions, hiding');
             this.hideSuggestions();
+        }
+    }
+
+    getCurrentTypingWord() {
+        // First try to use our tracked typing word
+        if (this.currentTypingWord && this.currentTypingWord.length >= 2) {
+            console.log('Using tracked typing word:', this.currentTypingWord);
+            return this.currentTypingWord;
+        }
+        
+        // Try to get the word currently being typed using selection
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            const container = range.startContainer;
+            
+            if (container.nodeType === Node.TEXT_NODE) {
+                const text = container.textContent || '';
+                const offset = range.startOffset;
+                
+                // Find the current word being typed
+                let start = offset;
+                while (start > 0 && /\w/.test(text[start - 1])) start--;
+                
+                let end = offset;
+                while (end < text.length && /\w/.test(text[end])) end++;
+                
+                const word = text.substring(start, end);
+                console.log('Found word from selection:', word);
+                return word;
+            }
+        }
+        
+        // Fallback: get the last word from document
+        const docText = this.getGoogleDocsText();
+        const words = docText.split(/\s+/);
+        const lastWord = words[words.length - 1] || '';
+        console.log('Fallback to last word:', lastWord);
+        return lastWord;
+    }
+
+    trackTyping(key) {
+        const currentDocText = this.getGoogleDocsText();
+        
+        // If document text changed, we're typing a new word
+        if (currentDocText !== this.lastDocumentText) {
+            // Find what changed (the new word being typed)
+            const words = currentDocText.split(/\s+/);
+            const lastWords = this.lastDocumentText.split(/\s+/);
+            
+            // If we have more words now, the last word is what we're typing
+            if (words.length > lastWords.length) {
+                this.currentTypingWord = words[words.length - 1] || '';
+                console.log('Tracking new word:', this.currentTypingWord);
+            } else if (words.length === lastWords.length) {
+                // Same number of words, but content changed - update the last word
+                this.currentTypingWord = words[words.length - 1] || '';
+                console.log('Updating tracked word:', this.currentTypingWord);
+            }
+            
+            this.lastDocumentText = currentDocText;
         }
     }
 
