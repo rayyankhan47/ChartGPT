@@ -39,27 +39,35 @@ class MedicalAutocomplete {
             characterData: true
         });
 
-        // Keyboard navigation
+        // Also listen for keydown events to catch typing
         document.addEventListener('keydown', (e) => {
-            if (!this.isActive) return;
+            // Handle autocomplete navigation
+            if (this.isActive) {
+                switch(e.key) {
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        this.navigateSuggestions(1);
+                        return;
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        this.navigateSuggestions(-1);
+                        return;
+                    case 'Tab':
+                    case 'Enter':
+                        e.preventDefault();
+                        this.acceptSuggestion();
+                        return;
+                    case 'Escape':
+                        this.hideSuggestions();
+                        return;
+                }
+            }
             
-            switch(e.key) {
-                case 'ArrowDown':
-                    e.preventDefault();
-                    this.navigateSuggestions(1);
-                    break;
-                case 'ArrowUp':
-                    e.preventDefault();
-                    this.navigateSuggestions(-1);
-                    break;
-                case 'Tab':
-                case 'Enter':
-                    e.preventDefault();
-                    this.acceptSuggestion();
-                    break;
-                case 'Escape':
-                    this.hideSuggestions();
-                    break;
+            // Check for typing (letters, numbers, space)
+            if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete') {
+                setTimeout(() => {
+                    this.handleDocumentChange();
+                }, 100);
             }
         });
     }
@@ -74,20 +82,16 @@ class MedicalAutocomplete {
 
     async checkForAutocomplete() {
         console.log('Checking for autocomplete...');
-        const selection = window.getSelection();
-        if (!selection.rangeCount) {
-            console.log('No selection range');
-            return;
-        }
-
-        const range = selection.getRangeAt(0);
-        const cursorPosition = this.getCursorPosition();
         
-        // Get text around cursor
-        const context = this.getTextAroundCursor(range, 100);
-        const currentWord = this.getCurrentWord(range);
+        // Get the current text from Google Docs
+        const docText = this.getGoogleDocsText();
+        console.log('Document text:', docText.substring(0, 100));
         
-        console.log('Current word:', currentWord, 'Context:', context.substring(0, 50));
+        // Find the last word being typed
+        const words = docText.split(/\s+/);
+        const currentWord = words[words.length - 1] || '';
+        
+        console.log('Current word:', currentWord, 'Length:', currentWord.length);
         
         if (currentWord.length < 2) {
             console.log('Word too short, hiding suggestions');
@@ -95,18 +99,33 @@ class MedicalAutocomplete {
             return;
         }
 
+        // Get context (last few words)
+        const context = words.slice(-5).join(' ');
+        
         // Check for medical autocomplete triggers
         console.log('Getting medical suggestions...');
         const suggestions = await this.getMedicalSuggestions(context, currentWord);
         console.log('Got suggestions:', suggestions);
         
         if (suggestions.length > 0) {
-            console.log('Showing suggestions at position:', cursorPosition);
-            this.showSuggestions(suggestions, cursorPosition);
+            console.log('Showing suggestions');
+            const position = this.getCursorPosition() || { x: 200, y: 200 };
+            this.showSuggestions(suggestions, position);
         } else {
             console.log('No suggestions, hiding');
             this.hideSuggestions();
         }
+    }
+
+    getGoogleDocsText() {
+        // Try to get text from Google Docs editor
+        const editor = document.querySelector('.kix-appview-editor');
+        if (editor) {
+            return editor.textContent || '';
+        }
+        
+        // Fallback to body text
+        return document.body.textContent || '';
     }
 
     getTextAroundCursor(range, chars) {
@@ -121,9 +140,32 @@ class MedicalAutocomplete {
     }
 
     getCurrentWord(range) {
+        // Google Docs has a complex DOM structure, so we need to get text differently
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return '';
+        
+        // Get the current text content around the cursor
         const container = range.startContainer;
-        const text = container.textContent || '';
-        const offset = range.startOffset;
+        let text = '';
+        let offset = range.startOffset;
+        
+        // Handle different node types
+        if (container.nodeType === Node.TEXT_NODE) {
+            text = container.textContent || '';
+        } else {
+            // For Google Docs, we might need to get text from parent elements
+            const textNode = this.findTextNode(container);
+            if (textNode) {
+                text = textNode.textContent || '';
+                offset = 0; // Reset offset for text node
+            } else {
+                // Fallback: get all text from the document
+                text = document.body.textContent || '';
+                offset = 0;
+            }
+        }
+        
+        console.log('Text content:', text.substring(0, 100), 'Offset:', offset);
         
         // Find word boundaries
         let start = offset;
@@ -132,7 +174,27 @@ class MedicalAutocomplete {
         let end = offset;
         while (end < text.length && /\w/.test(text[end])) end++;
         
-        return text.substring(start, end);
+        const word = text.substring(start, end);
+        console.log('Extracted word:', word, 'Length:', word.length);
+        
+        return word;
+    }
+
+    findTextNode(element) {
+        // Find the actual text node in Google Docs structure
+        if (element.nodeType === Node.TEXT_NODE) {
+            return element;
+        }
+        
+        for (let child of element.childNodes) {
+            if (child.nodeType === Node.TEXT_NODE && child.textContent.trim()) {
+                return child;
+            }
+            const textNode = this.findTextNode(child);
+            if (textNode) return textNode;
+        }
+        
+        return null;
     }
 
     getCursorPosition() {
