@@ -22,7 +22,7 @@ body {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 10;
+    z-index: 0;
     overflow: hidden;
 }
 
@@ -30,18 +30,17 @@ body {
     position: absolute;
     border-radius: 50%;
     background: var(--color);
-    opacity: 0.9;
+    opacity: 0.15;
     width: var(--size);
     height: var(--size);
-    filter: blur(0.5px);
-    box-shadow: 0 0 60px rgba(255, 255, 255, 1);
+    filter: blur(1px);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
     transition: all 0.1s ease;
-    border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .bubble:hover {
-    transform: scale(1.2);
-    opacity: 1;
+    transform: scale(1.1);
+    opacity: 0.25;
 }
 
 .test-bubble {
@@ -55,7 +54,7 @@ body {
 /* Main Container */
 .container {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     padding: 32px 24px;
     display: flex;
     flex-direction: column;

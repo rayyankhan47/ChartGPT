@@ -112,7 +112,7 @@ function initBubbles() {
     
     function createBubble() {
         const bubble = document.createElement('div');
-        const size = Math.random() * 60 + 40; // 40-100px (much bigger!)
+        const size = Math.random() * 30 + 15; // 15-45px (much smaller!)
         const color = colors[Math.floor(Math.random() * colors.length)];
         
         bubble.className = 'bubble';
@@ -123,9 +123,9 @@ function initBubbles() {
         bubble.style.left = Math.random() * 100 + '%';
         bubble.style.top = Math.random() * 100 + '%';
         
-        // Physics properties - more varied movement
-        bubble.vx = (Math.random() - 0.5) * 1.5; // Horizontal velocity
-        bubble.vy = (Math.random() - 0.5) * 1.5; // Vertical velocity
+        // Physics properties - gentler, more natural movement
+        bubble.vx = (Math.random() - 0.5) * 0.8; // Horizontal velocity
+        bubble.vy = (Math.random() - 0.5) * 0.8; // Vertical velocity
         bubble.x = parseFloat(bubble.style.left);
         bubble.y = parseFloat(bubble.style.top);
         
@@ -167,16 +167,13 @@ function initBubbles() {
                 bubble.y = Math.max(0, Math.min(100, bubble.y));
             }
             
-            // Remove gravity - let bubbles float more naturally
-            // bubble.vy -= 0.02;
+            // Very gentle random movement
+            bubble.vx += (Math.random() - 0.5) * 0.02;
+            bubble.vy += (Math.random() - 0.5) * 0.02;
             
-            // Add some random movement
-            bubble.vx += (Math.random() - 0.5) * 0.1;
-            bubble.vy += (Math.random() - 0.5) * 0.1;
-            
-            // Damping
-            bubble.vx *= 0.98;
-            bubble.vy *= 0.98;
+            // Gentle damping
+            bubble.vx *= 0.995;
+            bubble.vy *= 0.995;
             
             // Update visual position
             bubble.style.left = bubble.x + '%';
