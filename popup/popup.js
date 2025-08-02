@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const statusIndicator = document.getElementById('statusIndicator');
     
     // Initialize bubble physics
+    console.log('Chartu popup loaded, initializing bubbles...');
     initBubbles();
 
     // Check if we're on Google Docs
@@ -90,14 +91,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Bubble Physics System
 function initBubbles() {
+    console.log('initBubbles called');
     const container = document.getElementById('bubbleContainer');
+    console.log('Bubble container:', container);
+    
+    if (!container) {
+        console.error('Bubble container not found!');
+        return;
+    }
+    
     const bubbles = [];
     const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', '#FF8A80', '#81C784'];
     
     // Create initial bubbles
+    console.log('Creating initial bubbles...');
     for (let i = 0; i < 12; i++) {
         createBubble();
     }
+    console.log('Created', bubbles.length, 'bubbles');
     
     function createBubble() {
         const bubble = document.createElement('div');

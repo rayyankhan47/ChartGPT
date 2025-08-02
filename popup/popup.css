@@ -43,6 +43,14 @@ body {
     opacity: 1;
 }
 
+.test-bubble {
+    opacity: 1 !important;
+    z-index: 1000 !important;
+    background: #FF0000 !important;
+    box-shadow: 0 0 50px rgba(255, 0, 0, 1) !important;
+    border: 3px solid #FFFFFF !important;
+}
+
 /* Main Container */
 .container {
     position: relative;
