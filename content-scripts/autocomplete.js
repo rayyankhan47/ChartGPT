@@ -22,7 +22,9 @@ class MedicalAutocomplete {
         this.autocompleteBox = document.createElement('div');
         this.autocompleteBox.className = 'chartgpt-autocomplete';
         this.autocompleteBox.style.display = 'none';
+        this.autocompleteBox.id = 'chartgpt-autocomplete-box';
         document.body.appendChild(this.autocompleteBox);
+        console.log('Autocomplete box created and added to DOM');
     }
 
     setupEventListeners() {
@@ -71,8 +73,12 @@ class MedicalAutocomplete {
     }
 
     async checkForAutocomplete() {
+        console.log('Checking for autocomplete...');
         const selection = window.getSelection();
-        if (!selection.rangeCount) return;
+        if (!selection.rangeCount) {
+            console.log('No selection range');
+            return;
+        }
 
         const range = selection.getRangeAt(0);
         const cursorPosition = this.getCursorPosition();
@@ -81,17 +87,24 @@ class MedicalAutocomplete {
         const context = this.getTextAroundCursor(range, 100);
         const currentWord = this.getCurrentWord(range);
         
+        console.log('Current word:', currentWord, 'Context:', context.substring(0, 50));
+        
         if (currentWord.length < 2) {
+            console.log('Word too short, hiding suggestions');
             this.hideSuggestions();
             return;
         }
 
         // Check for medical autocomplete triggers
+        console.log('Getting medical suggestions...');
         const suggestions = await this.getMedicalSuggestions(context, currentWord);
+        console.log('Got suggestions:', suggestions);
         
         if (suggestions.length > 0) {
+            console.log('Showing suggestions at position:', cursorPosition);
             this.showSuggestions(suggestions, cursorPosition);
         } else {
+            console.log('No suggestions, hiding');
             this.hideSuggestions();
         }
     }
@@ -213,6 +226,7 @@ class MedicalAutocomplete {
     }
 
     showSuggestions(suggestions, position) {
+        console.log('Showing suggestions:', suggestions);
         this.suggestions = suggestions;
         this.currentSuggestionIndex = 0;
         this.isActive = true;
@@ -234,9 +248,22 @@ class MedicalAutocomplete {
             this.autocompleteBox.style.left = position.x + 'px';
             this.autocompleteBox.style.top = position.y + 'px';
             this.autocompleteBox.style.display = 'block';
+            console.log('Positioned autocomplete at:', position.x, position.y);
+        } else {
+            // Fallback position
+            this.autocompleteBox.style.left = '100px';
+            this.autocompleteBox.style.top = '100px';
+            this.autocompleteBox.style.display = 'block';
+            console.log('Using fallback position');
         }
 
         this.updateSelection();
+    }
+
+    // Test function to manually show suggestions
+    testShowSuggestions() {
+        const testSuggestions = ['chest pain', 'chest tightness', 'chest discomfort'];
+        this.showSuggestions(testSuggestions, { x: 200, y: 200 });
     }
 
     hideSuggestions() {
@@ -298,10 +325,29 @@ class MedicalAutocomplete {
 }
 
 // Initialize autocomplete when Chartu is ready
-if (window.chartu) {
-    window.medicalAutocomplete = new MedicalAutocomplete();
-} else {
-    document.addEventListener('DOMContentLoaded', () => {
+function initializeAutocomplete() {
+    console.log('Attempting to initialize medical autocomplete...');
+    if (window.medicalAutocomplete) {
+        console.log('Medical autocomplete already exists');
+        return;
+    }
+    
+    try {
         window.medicalAutocomplete = new MedicalAutocomplete();
-    });
+        console.log('Medical autocomplete initialized successfully');
+    } catch (error) {
+        console.error('Failed to initialize medical autocomplete:', error);
+    }
+}
+
+// Try to initialize immediately
+initializeAutocomplete();
+
+// Also try when Chartu is ready
+if (window.chartu) {
+    initializeAutocomplete();
+} else {
+    document.addEventListener('DOMContentLoaded', initializeAutocomplete);
+    // Also try after a delay
+    setTimeout(initializeAutocomplete, 2000);
 } 
