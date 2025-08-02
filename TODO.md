@@ -1,4 +1,4 @@
-# ChartGPT Development TODO
+# Chartu Development TODO
 
 ## ✅ Completed (Phase 1)
 - [x] Initialize Git repository

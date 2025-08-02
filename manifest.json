@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "ChartGPT - AI Medical Documentation Assistant",
+  "name": "Chartu - AI Medical Documentation Assistant",
   "version": "1.0.0",
   "description": "Intelligent medical documentation Chrome extension with AI-powered autocomplete, voice transcription, and image analysis",
   "permissions": [
@@ -25,7 +25,7 @@
   ],
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "ChartGPT - AI Medical Assistant"
+    "default_title": "Chartu - AI Medical Assistant"
   },
   "icons": {
     "16": "assets/icons/icon16.png",

@@ -1,4 +1,4 @@
-# ChartGPT - AI Medical Documentation Assistant
+# Chartu - AI Medical Documentation Assistant
 
 An intelligent Chrome extension that revolutionizes clinical workflow by combining multi-modal AI inputs for medical documentation.
 
@@ -126,4 +126,4 @@ Built for TerraHacks 2024 - Medical Innovation Challenge
 
 ---
 
-**ChartGPT**: Transforming medical documentation with AI-powered intelligence. 
+**Chartu**: Transforming medical documentation with AI-powered intelligence. 

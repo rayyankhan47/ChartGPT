@@ -1,5 +1,5 @@
-// ChartGPT Google Docs Content Script
-class ChartGPT {
+// Chartu Google Docs Content Script
+class Chartu {
     constructor() {
         this.isInitialized = false;
         this.sidebarOpen = false;
@@ -19,7 +19,7 @@ class ChartGPT {
             this.setupAutocomplete();
             this.setupVoiceRecognition();
             this.isInitialized = true;
-            console.log('ChartGPT initialized on Google Docs');
+            console.log('Chartu initialized on Google Docs');
         });
     }
 
@@ -39,7 +39,7 @@ class ChartGPT {
         const fab = document.createElement('button');
         fab.className = 'chartgpt-fab';
         fab.innerHTML = '📋';
-        fab.title = 'ChartGPT - AI Medical Assistant';
+        fab.title = 'Chartu - AI Medical Assistant';
         
         fab.addEventListener('click', () => {
             this.toggleSidebar();
@@ -55,7 +55,7 @@ class ChartGPT {
             <div class="chartgpt-sidebar-header">
                 <div class="chartgpt-sidebar-title">
                     <span>📋</span>
-                    <span>ChartGPT</span>
+                    <span>Chartu</span>
                 </div>
                 <button class="chartgpt-sidebar-close">×</button>
             </div>
@@ -66,7 +66,7 @@ class ChartGPT {
                         <div class="chartgpt-message-avatar">AI</div>
                         <div class="chartgpt-message-content">
                             <div class="chartgpt-message-text">
-                                Hello! I'm your AI medical documentation assistant. I can help you with:
+                                Hello! I'm Chartu, your AI medical documentation assistant. I can help you with:
                                 <br><br>
                                 • Smart autocomplete for medical notes<br>
                                 • Voice transcription of patient conversations<br>
@@ -415,26 +415,26 @@ class ChartGPT {
     }
 }
 
-// Initialize ChartGPT when DOM is ready
+// Initialize Chartu when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        new ChartGPT();
+        new Chartu();
     });
 } else {
-    new ChartGPT();
+    new Chartu();
 }
 
 // Listen for messages from popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'toggleSidebar') {
-        if (window.chartGPT) {
-            window.chartGPT.toggleSidebar();
+        if (window.chartu) {
+            window.chartu.toggleSidebar();
         }
     }
 });
 
 // Store instance globally for message handling
-window.chartGPT = null;
+window.chartu = null;
 document.addEventListener('DOMContentLoaded', () => {
-    window.chartGPT = new ChartGPT();
+    window.chartu = new Chartu();
 }); 

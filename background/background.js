@@ -1,11 +1,11 @@
-// Background service worker for ChartGPT
+// Background service worker for Chartu
 const GEMINI_API_KEY = 'AIzaSyAjnyE8evt6EWcQ2jD3h8DuxOu-48E7Ig0';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent';
 
 // Extension installation
 chrome.runtime.onInstalled.addListener(function(details) {
     if (details.reason === 'install') {
-        console.log('ChartGPT installed successfully!');
+        console.log('Chartu installed successfully!');
         
         // Set default settings
         chrome.storage.local.set({
@@ -95,7 +95,7 @@ async function callGeminiAPI(prompt, context = '') {
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     if (changeInfo.status === 'complete' && tab.url && tab.url.includes('docs.google.com')) {
         // Content script will be automatically injected via manifest
-        console.log('Google Docs detected, ChartGPT ready');
+        console.log('Google Docs detected, Chartu ready');
     }
 });
 
