@@ -18,7 +18,6 @@ class Chartu {
             this.createSidebar();
             this.setupAutocomplete();
             this.setupVoiceRecognition();
-            this.initializeMedicalAutocomplete();
             this.isInitialized = true;
             console.log('Chartu initialized on Google Docs');
         });
@@ -404,14 +403,7 @@ class Chartu {
         });
     }
 
-    initializeMedicalAutocomplete() {
-        // Initialize the medical autocomplete system
-        if (window.medicalAutocomplete) {
-            console.log('Medical autocomplete already initialized');
-        } else {
-            window.medicalAutocomplete = new MedicalAutocomplete();
-        }
-    }
+
 
     updateDocumentContent() {
         const editor = document.querySelector('.kix-appview-editor');

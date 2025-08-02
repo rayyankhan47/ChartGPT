@@ -18,7 +18,7 @@
   "content_scripts": [
     {
       "matches": ["https://docs.google.com/*"],
-      "js": ["content-scripts/google-docs.js", "content-scripts/autocomplete.js"],
+      "js": ["content-scripts/google-docs.js", "content-scripts/simple-autocomplete.js"],
       "css": ["content-scripts/content-styles.css"],
       "run_at": "document_end"
     }
