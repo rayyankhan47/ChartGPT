@@ -30,17 +30,17 @@ body {
     position: absolute;
     border-radius: 50%;
     background: var(--color);
-    opacity: 0.15;
+    opacity: 0.4;
     width: var(--size);
     height: var(--size);
-    filter: blur(1px);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    filter: blur(0.8px);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
     transition: all 0.1s ease;
 }
 
 .bubble:hover {
     transform: scale(1.1);
-    opacity: 0.25;
+    opacity: 0.6;
 }
 
 .test-bubble {
