@@ -30,43 +30,42 @@ body {
     position: absolute;
     border-radius: 50%;
     background: var(--color);
-    opacity: 0.12;
-    animation: float 15s ease-in-out infinite;
+    opacity: 0.3;
+    animation: float 8s ease-in-out infinite;
     animation-delay: var(--delay);
     width: var(--size);
     height: var(--size);
-    filter: blur(0.3px);
-    box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+    filter: blur(0.5px);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
     left: var(--start-x);
+}
+
+.test-bubble {
+    opacity: 0.6 !important;
+    animation: none !important;
+    transform: translateY(50vh) scale(1) !important;
+    z-index: 10;
 }
 
 @keyframes float {
     0% {
-        transform: translateY(100vh) translateX(0px) scale(0.7);
+        transform: translateY(100vh) translateX(0px) scale(0.8);
         opacity: 0;
     }
-    10% {
-        opacity: 0.12;
-        transform: translateY(85vh) translateX(5px) scale(0.8);
-    }
-    30% {
-        opacity: 0.15;
-        transform: translateY(60vh) translateX(15px) scale(0.9);
+    20% {
+        opacity: 0.3;
+        transform: translateY(70vh) translateX(10px) scale(0.9);
     }
     50% {
-        transform: translateY(35vh) translateX(25px) scale(1.1);
-        opacity: 0.18;
+        transform: translateY(40vh) translateX(20px) scale(1.2);
+        opacity: 0.4;
     }
-    70% {
-        opacity: 0.15;
-        transform: translateY(15vh) translateX(15px) scale(0.9);
-    }
-    90% {
-        opacity: 0.12;
-        transform: translateY(5vh) translateX(5px) scale(0.8);
+    80% {
+        opacity: 0.3;
+        transform: translateY(10vh) translateX(10px) scale(0.9);
     }
     100% {
-        transform: translateY(-30vh) translateX(0px) scale(0.7);
+        transform: translateY(-20vh) translateX(0px) scale(0.8);
         opacity: 0;
     }
 }
