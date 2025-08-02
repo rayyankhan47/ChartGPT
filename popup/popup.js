@@ -123,9 +123,9 @@ function initBubbles() {
         bubble.style.left = Math.random() * 100 + '%';
         bubble.style.top = Math.random() * 100 + '%';
         
-        // Physics properties
-        bubble.vx = (Math.random() - 0.5) * 2; // Horizontal velocity
-        bubble.vy = (Math.random() - 0.5) * 2; // Vertical velocity
+        // Physics properties - more varied movement
+        bubble.vx = (Math.random() - 0.5) * 1.5; // Horizontal velocity
+        bubble.vy = (Math.random() - 0.5) * 1.5; // Vertical velocity
         bubble.x = parseFloat(bubble.style.left);
         bubble.y = parseFloat(bubble.style.top);
         
@@ -167,12 +167,16 @@ function initBubbles() {
                 bubble.y = Math.max(0, Math.min(100, bubble.y));
             }
             
-            // Apply gravity (bubbles float up slightly)
-            bubble.vy -= 0.02;
+            // Remove gravity - let bubbles float more naturally
+            // bubble.vy -= 0.02;
+            
+            // Add some random movement
+            bubble.vx += (Math.random() - 0.5) * 0.1;
+            bubble.vy += (Math.random() - 0.5) * 0.1;
             
             // Damping
-            bubble.vx *= 0.99;
-            bubble.vy *= 0.99;
+            bubble.vx *= 0.98;
+            bubble.vy *= 0.98;
             
             // Update visual position
             bubble.style.left = bubble.x + '%';
