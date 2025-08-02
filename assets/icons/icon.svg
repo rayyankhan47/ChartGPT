@@ -1,0 +1,26 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#007AFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5856D6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="url(#grad1)" stroke="#ffffff" stroke-width="4"/>
+  
+  <!-- Clipboard -->
+  <rect x="32" y="24" width="64" height="80" rx="8" fill="#ffffff" opacity="0.9"/>
+  
+  <!-- Clipboard top -->
+  <rect x="44" y="16" width="40" height="16" rx="8" fill="#ffffff" opacity="0.9"/>
+  
+  <!-- Medical cross -->
+  <rect x="58" y="44" width="12" height="40" fill="#007AFF"/>
+  <rect x="44" y="58" width="40" height="12" fill="#007AFF"/>
+  
+  <!-- Lines on clipboard -->
+  <rect x="40" y="70" width="48" height="2" fill="#007AFF" opacity="0.6"/>
+  <rect x="40" y="78" width="48" height="2" fill="#007AFF" opacity="0.6"/>
+  <rect x="40" y="86" width="32" height="2" fill="#007AFF" opacity="0.6"/>
+</svg> 
