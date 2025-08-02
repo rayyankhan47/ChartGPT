@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const settingsBtn = document.getElementById('settings');
     const statusText = document.getElementById('statusText');
     const statusIndicator = document.getElementById('statusIndicator');
+    
+    // Initialize bubble physics
+    initBubbles();
 
     // Check if we're on Google Docs
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -83,4 +86,83 @@ document.addEventListener('DOMContentLoaded', function() {
     openSidebarBtn.addEventListener('mouseleave', function() {
         this.style.transform = 'translateY(0) scale(1)';
     });
-}); 
+});
+
+// Bubble Physics System
+function initBubbles() {
+    const container = document.getElementById('bubbleContainer');
+    const bubbles = [];
+    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', '#FF8A80', '#81C784'];
+    
+    // Create initial bubbles
+    for (let i = 0; i < 12; i++) {
+        createBubble();
+    }
+    
+    function createBubble() {
+        const bubble = document.createElement('div');
+        const size = Math.random() * 40 + 20; // 20-60px
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
+        bubble.className = 'bubble';
+        bubble.style.setProperty('--size', size + 'px');
+        bubble.style.setProperty('--color', color);
+        
+        // Random starting position
+        bubble.style.left = Math.random() * 100 + '%';
+        bubble.style.top = Math.random() * 100 + '%';
+        
+        // Physics properties
+        bubble.vx = (Math.random() - 0.5) * 2; // Horizontal velocity
+        bubble.vy = (Math.random() - 0.5) * 2; // Vertical velocity
+        bubble.x = parseFloat(bubble.style.left);
+        bubble.y = parseFloat(bubble.style.top);
+        
+        container.appendChild(bubble);
+        bubbles.push(bubble);
+        
+        // Remove bubble after some time and create new one
+        setTimeout(() => {
+            if (bubble.parentNode) {
+                bubble.parentNode.removeChild(bubble);
+                const index = bubbles.indexOf(bubble);
+                if (index > -1) bubbles.splice(index, 1);
+                createBubble();
+            }
+        }, 15000 + Math.random() * 10000);
+    }
+    
+    // Physics animation loop
+    function animate() {
+        bubbles.forEach(bubble => {
+            // Update position
+            bubble.x += bubble.vx;
+            bubble.y += bubble.vy;
+            
+            // Bounce off walls
+            if (bubble.x <= 0 || bubble.x >= 100) {
+                bubble.vx *= -0.8;
+                bubble.x = Math.max(0, Math.min(100, bubble.x));
+            }
+            if (bubble.y <= 0 || bubble.y >= 100) {
+                bubble.vy *= -0.8;
+                bubble.y = Math.max(0, Math.min(100, bubble.y));
+            }
+            
+            // Apply gravity (bubbles float up slightly)
+            bubble.vy -= 0.02;
+            
+            // Damping
+            bubble.vx *= 0.99;
+            bubble.vy *= 0.99;
+            
+            // Update visual position
+            bubble.style.left = bubble.x + '%';
+            bubble.style.top = bubble.y + '%';
+        });
+        
+        requestAnimationFrame(animate);
+    }
+    
+    animate();
+} 
