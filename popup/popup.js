@@ -112,7 +112,7 @@ function initBubbles() {
     
     function createBubble() {
         const bubble = document.createElement('div');
-        const size = Math.random() * 40 + 20; // 20-60px
+        const size = Math.random() * 60 + 40; // 40-100px (much bigger!)
         const color = colors[Math.floor(Math.random() * colors.length)];
         
         bubble.className = 'bubble';
@@ -131,6 +131,13 @@ function initBubbles() {
         
         container.appendChild(bubble);
         bubbles.push(bubble);
+        console.log('Created bubble:', {
+            size: size + 'px',
+            color: color,
+            x: bubble.x,
+            y: bubble.y,
+            element: bubble
+        });
         
         // Remove bubble after some time and create new one
         setTimeout(() => {
